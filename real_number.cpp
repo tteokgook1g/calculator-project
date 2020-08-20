@@ -46,52 +46,6 @@ Real::Real(bool _Sign, bool _INFINITYbit) noexcept : infinity_bit_(_INFINITYbit)
 		data_dec_[i] = 0;
 	}
 }
-Real::Real(const short _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
-}
-Real::Real(const int _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
-}
-Real::Real(const long _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
-}
-Real::Real(const long long _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(_Val * -1, true, true));
-}
-Real::Real(const unsigned short _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
-}
-Real::Real(const unsigned int _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
-}
-Real::Real(const unsigned long _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
-}
-Real::Real(const unsigned long long _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
-}
-Real::Real(const float _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * INFINITY) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
-}
-Real::Real(const double _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
-}
-Real::Real(const long double _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
-}
 Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0) {
 	data_int_ = nullptr;
 	data_dec_ = nullptr;
@@ -182,6 +136,52 @@ Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserv
 		}
 	}
 	sign_ = false;
+}
+Real::Real(const short _Val) noexcept {
+	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
+	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+}
+Real::Real(const int _Val) noexcept {
+	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
+	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+}
+Real::Real(const long _Val) noexcept {
+	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
+	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+}
+Real::Real(const long long _Val) noexcept {
+	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
+	else *this = std::move(Real(_Val * -1, true, true));
+}
+Real::Real(const unsigned short _Val) noexcept {
+	*this = std::move(Real(_Val, false, true));
+}
+Real::Real(const unsigned int _Val) noexcept {
+	*this = std::move(Real(_Val, false, true));
+}
+Real::Real(const unsigned long _Val) noexcept {
+	*this = std::move(Real(_Val, false, true));
+}
+Real::Real(const unsigned long long _Val) noexcept {
+	*this = std::move(Real(_Val, false, true));
+}
+Real::Real(const float _Val) noexcept {
+	if (_Val == INFINITY) *this = std::move(Real{ false, true });
+	else if (_Val == -1 * INFINITY) *this = std::move(Real{ true, true });
+	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
+	else *this = std::move(Real{ std::to_string(_Val) });
+}
+Real::Real(const double _Val) noexcept {
+	if (_Val == INFINITY) *this = std::move(Real{ false, true });
+	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
+	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
+	else *this = std::move(Real{ std::to_string(_Val) });
+}
+Real::Real(const long double _Val) noexcept {
+	if (_Val == INFINITY) *this = std::move(Real{ false, true });
+	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
+	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
+	else *this = std::move(Real{ std::to_string(_Val) });
 }
 Real::Real(const bool _Val) noexcept {
 	*this = std::move(Real{});
