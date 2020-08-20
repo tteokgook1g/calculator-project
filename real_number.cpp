@@ -49,21 +49,22 @@ Real::Real(bool _Sign, bool _INFINITYbit) noexcept : infinity_bit_(_INFINITYbit)
 Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0) {
 	data_int_ = nullptr;
 	data_dec_ = nullptr;
-	if (_Val.find("-INFINITY") != std::string::npos || _Val.find("-infinity") != std::string::npos) {
-		*this = real_number_value::infinity_negative;
-		return;
-	}
-	if (_Val.find("INFINITY") != std::string::npos || _Val.find("infinity") != std::string::npos) {
-		*this = real_number_value::infinity;
-		return;
-	}
-	if (_Val.find("NAN") != std::string::npos || _Val.find("NaN") != std::string::npos || _Val.find("nan") != std::string::npos) {
-		*this = real_number_value::NaN;
-		return;
-	}
 	std::string val = _Val;
 	base::DeleteComma(val);
 	base::DeleteBlank(val);
+	base::CapitalToSmall(val);
+	if (_Val.find("-inf") != std::string::npos || _Val.find("-infinity") != std::string::npos) {
+		*this = real_number_value::infinity_negative;
+		return;
+	}
+	if (_Val.find("inf") != std::string::npos || _Val.find("infinity") != std::string::npos) {
+		*this = real_number_value::infinity;
+		return;
+	}
+	if (_Val.find("nan") != std::string::npos) {
+		*this = real_number_value::NaN;
+		return;
+	}
 	if (val.length() == 0) {
 		*this = real_number_value::zero;
 		return;
