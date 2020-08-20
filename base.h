@@ -33,6 +33,35 @@ constexpr int kAccuracy = 100;
 constexpr int kMaxSizeVal = USHRT_MAX;
 
 
+struct NoCapsTraits : public std::char_traits<char> {
+	static char get_real_rank(char c) {
+		if ('a' <= c && c <= 'z') {
+			return (c - 'a' + 'A');
+		}
+		return c;
+	}
+
+	static bool lt(char c1, char c2) {
+		return get_real_rank(c1) < get_real_rank(c2);
+	}
+
+	static int compare(const char* s1, const char* s2, size_t n) {
+		while (n-- != 0) {
+			if (get_real_rank(*s1) < get_real_rank(*s2)) {
+				return -1;
+			}
+			if (get_real_rank(*s1) > get_real_rank(*s2)) {
+				return 1;
+			}
+			++s1;
+			++s2;
+		}
+		return 0;
+	}
+};
+using NoCapitalString = std::basic_string<char, NoCapsTraits>;
+
+
 //Check that whether char type value is number or not.
 inline constexpr bool IsNumber(const char _Val) noexcept {
 	return ('0' <= _Val && _Val <= '9');
