@@ -1,4 +1,4 @@
-# Calculator Project Ver 1.0.0
+# Calculator Project  Ver 1.0.0
 ## Programming language
 ### -c++
 ## Includes
