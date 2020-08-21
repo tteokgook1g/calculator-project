@@ -33,9 +33,6 @@ constexpr int kAccuracy = 100;
 constexpr int kMaxSizeVal = USHRT_MAX;
 
 
-using NoCapitalString = std::basic_string<char, NoCapsTraits>;
-
-
 //Check that whether char type value is number or not.
 inline constexpr bool IsNumber(const char _Val) noexcept {
 	return ('0' <= _Val && _Val <= '9');
