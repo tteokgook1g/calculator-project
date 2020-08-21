@@ -1,5 +1,5 @@
 # Calculator Project
-## Version 1.0.1 released
+# Version 1.0.1 released
 ## Programming language
 ### -c++
 ## Includes
