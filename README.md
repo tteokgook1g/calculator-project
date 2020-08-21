@@ -1,5 +1,5 @@
 # Calculator Project
-# Version 1.0.2 beta
+# Version 1.0.2 released
 # Updates
 ## parameters of 4 or more bytes : change type to const&
 #
