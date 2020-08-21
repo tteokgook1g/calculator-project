@@ -21,7 +21,7 @@ protected:
 	base::MySize_t reserved_size_;
 	bool infinity_bit_;
 
-	explicit Real(const unsigned long long _Val, bool _Sign, bool _Check2) noexcept;
+	explicit Real(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept;
 	//Error occurs when someone tries to reference out of range.
 	short& operator[](const int index) const;
 public:
@@ -38,14 +38,14 @@ public:
 	Real(const short _Val) noexcept;
 	Real(const int _Val) noexcept;
 	Real(const long _Val) noexcept;
-	Real(const long long _Val) noexcept;
+	Real(const long long& _Val) noexcept;
 	Real(const unsigned short _Val) noexcept;
 	Real(const unsigned int _Val) noexcept;
 	Real(const unsigned long _Val) noexcept;
-	Real(const unsigned long long _Val) noexcept;
+	Real(const unsigned long long& _Val) noexcept;
 	Real(const float _Val) noexcept;
-	Real(const double _Val) noexcept;
-	Real(const long double _Val) noexcept;
+	Real(const double& _Val) noexcept;
+	Real(const long double& _Val) noexcept;
 	Real(const char* const _Val) noexcept;
 	Real(const std::nullptr_t& _nullptr) noexcept;
 	Real(const Real& _Val) noexcept;
@@ -135,7 +135,6 @@ public:
 	friend Real RoundDown(const Real& _Val, const int _digit) noexcept;
 };
 
-
 Real Power(const Real& base, const int index) noexcept;
 Real PowerOfTen(const int index) noexcept;
 Real SquareRoot(const Real& _Val) noexcept;
@@ -143,7 +142,6 @@ Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr = std::cout) noexcept
 Real RoundOff(const Real& _Val, const int _digit = 0) noexcept;
 Real RoundUp(const Real& _Val, const int _digit = 0) noexcept;
 Real RoundDown(const Real& _Val, const int _digit = 0) noexcept;
-
 
 namespace real_number_value {
 	const real_number::Real NaN{ nullptr };
