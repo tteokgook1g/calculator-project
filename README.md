@@ -1,8 +1,11 @@
 # Calculator Project
-# Version 1.0.1 released
-## Programming language
-### -c++
-## Includes
+# Version 1.0.2 released
+# Updates
+## parameters of 4 or more bytes : change type to const&
+#
+### Programming language
+#### -c++
+### Includes
 #### -base.h 
 #### -real_number.h
 #### -real_number.cpp

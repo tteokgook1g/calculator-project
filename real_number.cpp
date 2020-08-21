@@ -10,7 +10,7 @@
 
 
 REAL_NUMBER_BEGIN
-Real::Real(const unsigned long long _Val, bool _Sign, bool _Check2) noexcept :sign_(_Sign), infinity_bit_(0) {
+Real::Real(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept :sign_(_Sign), infinity_bit_(0) {
 	std::string val{ std::to_string(_Val) };
 	reserved_size_ = static_cast<base::MySize_t>(val.length());
 	data_int_ = new short[reserved_size_];
@@ -150,7 +150,7 @@ Real::Real(const long _Val) noexcept {
 	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
 	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
 }
-Real::Real(const long long _Val) noexcept {
+Real::Real(const long long& _Val) noexcept {
 	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
 	else *this = std::move(Real(_Val * -1, true, true));
 }
@@ -163,7 +163,7 @@ Real::Real(const unsigned int _Val) noexcept {
 Real::Real(const unsigned long _Val) noexcept {
 	*this = std::move(Real(_Val, false, true));
 }
-Real::Real(const unsigned long long _Val) noexcept {
+Real::Real(const unsigned long long& _Val) noexcept {
 	*this = std::move(Real(_Val, false, true));
 }
 Real::Real(const float _Val) noexcept {
@@ -172,13 +172,13 @@ Real::Real(const float _Val) noexcept {
 	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
 	else *this = std::move(Real{ std::to_string(_Val) });
 }
-Real::Real(const double _Val) noexcept {
+Real::Real(const double& _Val) noexcept {
 	if (_Val == INFINITY) *this = std::move(Real{ false, true });
 	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
 	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
 	else *this = std::move(Real{ std::to_string(_Val) });
 }
-Real::Real(const long double _Val) noexcept {
+Real::Real(const long double& _Val) noexcept {
 	if (_Val == INFINITY) *this = std::move(Real{ false, true });
 	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
 	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
