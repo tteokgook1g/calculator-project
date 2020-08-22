@@ -3,6 +3,7 @@
 # Major Updates
 ## Added function "real_number::IsEven,IsOdd"
 ## Improved function "real_number::Power"
+## Added operator "mathematical_expression : ^ (power)"
 #
 ### Programming language
 #### -c++
