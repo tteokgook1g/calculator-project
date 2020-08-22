@@ -1,8 +1,9 @@
 # Calculator Project
-# Version 1.0.3 released
-# Updates
-## real_number.h : Changed class Real to class FixedReal
-## real_number.h : Deleted namespace real_number_value
+# Version 1.1.0 released
+# Major Updates
+## Added function "real_number::IsEven,IsOdd"
+## Improved function "real_number::Power"
+## Added operator "mathematical_expression : ^ (power)"
 #
 ### Programming language
 #### -c++
