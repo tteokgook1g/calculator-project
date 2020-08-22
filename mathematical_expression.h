@@ -39,7 +39,7 @@ protected:
 
 	std::vector<ExpressionComponent> infix_expression_;
 	std::vector<ExpressionComponent> postfix_expression_;
-	real_number::Real value_of_expression_;
+	real_number::FixedReal value_of_expression_;
 
 	//Changes infix expression to postfix expression.
 	void InfixToPostfix() noexcept;
@@ -60,7 +60,7 @@ public:
 	//Returns postfix_expression_.
 	std::string PostfixExpression() const noexcept;
 	//Returns value_of_expression_.
-	real_number::Real Value() const noexcept;
+	real_number::FixedReal Value() const noexcept;
 	//Root the entire expression.
 	void SquareRoot() noexcept;
 
