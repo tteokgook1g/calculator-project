@@ -103,7 +103,8 @@ enum class OperatorPriority
 	kZero, //parentheses
 	kOne, //addition, subtraction
 	kTwo, //multiplication, division
-	kThree //sqrt (square root)
+	kThree, //sqrt (square root)
+	kFour //^ (power)
 };
 
 //Returns operator's priority.
