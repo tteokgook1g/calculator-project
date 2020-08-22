@@ -130,6 +130,9 @@ void Expression::ExpressionCalculate() noexcept {
 			case '/':
 				numbers.push(temp1 / temp2);
 				continue;
+			case '^':
+				numbers.push(real_number::Power(temp1,temp2));
+				continue;
 			}
 		}
 	}
@@ -556,6 +559,7 @@ Expression::ComponentType ValueType(std::string& val) noexcept {
 		case '+':
 		case '-':
 		case '/':
+		case '^':
 			return Expression::ComponentType::kBinaryOperator;
 		}
 	}
@@ -588,6 +592,8 @@ OperatorPriority Priority(const std::string& val) noexcept {
 			return OperatorPriority::kOne;
 		case '/':
 			return OperatorPriority::kTwo;
+		case '^':
+			return OperatorPriority::kFour;
 		}
 	}
 	if (val == "sqrt") {
