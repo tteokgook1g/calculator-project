@@ -1,7 +1,8 @@
 # Calculator Project
-# Version 1.0.2 released
+# Version 1.0.3 alpha
 # Updates
-## parameters of 4 or more bytes : change type to const&
+## real_number.h : Changed class Real to class FixedReal
+## real_number.h : Deleted namespace real_number_value
 #
 ### Programming language
 #### -c++
