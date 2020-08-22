@@ -1,8 +1,8 @@
 # Calculator Project
 # Version 1.1.0 released
-# Updates
+# Major Updates
 ## Added function "real_number::IsEven,IsOdd"
-## 
+## Improved function "real_number::Power"
 #
 ### Programming language
 #### -c++
