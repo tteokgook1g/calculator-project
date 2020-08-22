@@ -1074,7 +1074,7 @@ FixedReal::operator float() const noexcept {
 	}
 	float answer = 0;
 	for (int i = DigitHighest();i > DigitHighest() - 7;i--) {
-		answer += (*this)[i] * base::PowerOfTen<float>(i);
+		answer += At(i) * base::PowerOfTen<float>(i);
 	}
 	if (sign_) {
 		answer *= -1;
@@ -1095,8 +1095,8 @@ FixedReal::operator double() const noexcept {
 		return 0.0;
 	}
 	double answer = 0;
-	for (int i = DigitHighest();i > DigitHighest() - 7;i--) {
-		answer += (*this)[i] * base::PowerOfTen<double>(i);
+	for (int i = DigitHighest();i > DigitHighest() - 15;i--) {
+		answer += At(i) * base::PowerOfTen<double>(i);
 	}
 	if (sign_) {
 		answer *= -1;
@@ -1117,8 +1117,8 @@ FixedReal::operator long double() const noexcept {
 		return 0.0L;
 	}
 	long double answer = 0;
-	for (int i = DigitHighest();i > DigitHighest() - 7;i--) {
-		answer += (*this)[i] * base::PowerOfTen<long double>(i);
+	for (int i = DigitHighest();i > DigitHighest() - 15;i--) {
+		answer += At(i) * base::PowerOfTen<long double>(i);
 	}
 	if (sign_) {
 		answer *= -1;
@@ -1155,33 +1155,76 @@ FixedReal FixedReal::RoundDown(const int _digit) noexcept {
 }
 
 
-Real Power(const real_number::Real& base, const int index) noexcept {
-	if ((base == real_number_value::zero && index == 0) || base.data_dec_ == nullptr) {
-		return real_number_value::NaN;
-	}
-	if (base.infinity_bit_) {
-		if (base.sign_ || index & 1) {
-			return real_number_value::infinity_negative;
+FixedReal Power(const real_number::FixedReal& base, const FixedReal& exponent) noexcept {
+	//Check special case
+	{
+		if (base.data_dec_ == FixedReal(nullptr) || exponent.data_dec_ == FixedReal(nullptr))
+			return FixedReal(nullptr);
+		bool base0 = (base == 0), base_inf = (base == FixedReal(false, true));
+		bool base_n_inf = (base == FixedReal(true, true)), expo0 = (exponent == 0);
+		bool expo_inf = (exponent == FixedReal(false, true));
+		bool expo_n_inf = (exponent == FixedReal(true, true));
+		if (exponent > INT_MAX) expo_inf = true;
+		else if (exponent < INT_MIN) expo_n_inf = true;
+		if (((base0 || base_inf || base_n_inf) && expo0) ||
+			(base_n_inf && expo_inf) ||
+			(base0 && expo_n_inf)) return FixedReal(nullptr);
+		if ((base0 && expo_inf) ||
+			((base_inf || base_n_inf) && expo_n_inf)) return 0;
+		if (base_inf && expo_inf) return FixedReal(false, true);
+		//have to follow the order
+		if (base0) return 0;
+		if (expo0) return FixedReal(true); //1
+		if (expo_n_inf) return 0;
+		if (base_inf) return exponent > 0 ? FixedReal(false, true) : 0;
+		if (expo_inf) return base > 0 ? FixedReal(false, true) : FixedReal(nullptr);
+		if (base_n_inf) {
+			if (exponent.IsInteger()) {
+				if (exponent < 0) return 0;
+				if (exponent.IsEven()) return FixedReal(false, true);
+				else return FixedReal(true, true);
+			}
+			else return FixedReal(nullptr);
 		}
-		return real_number_value::infinity;
 	}
-	Real answer{ 1 };
-	if (index == 0) {
+	if (exponent.IsInteger()) {
+		FixedReal answer{ 1 };
+		int _index = static_cast<int>(exponent);
+		if (base == 10) {
+			return (answer << _index);
+		}
+		if (_index > 0) {
+			for (int i = _index - 1;i >= 0;i--) {
+				answer *= base;
+			}
+		}
+		else {
+			for (int i = -1 * _index - 1;i >= 0;i--) {
+				answer /= base;
+			}
+		}
 		return answer;
 	}
+#ifdef _CMATH_
+	return std::pow(static_cast<double>(base), static_cast<double>(exponent));
+#else
+	FixedReal answer{ 1 };
+	int _index = static_cast<int>(exponent);
 	if (base == 10) {
-		return (answer << index);
+		return (answer << _index);
 	}
-	if (index > 0) {
-		for (int i = index - 1;i >= 0;i--) {
+	if (_index > 0) {
+		for (int i = _index - 1;i >= 0;i--) {
 			answer *= base;
 		}
-		return answer;
 	}
-	for (int i = -1 * index - 1;i >= 0;i--) {
-		answer /= base;
+	else {
+		for (int i = -1 * _index - 1;i >= 0;i--) {
+			answer /= base;
+		}
 	}
 	return answer;
+#endif // _CMATH_
 }
 FixedReal PowerOfTen(const int index) noexcept {
 	FixedReal answer{ 1 };
