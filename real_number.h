@@ -72,8 +72,16 @@ public:
 	//Check whether it is not a number or a number.
 	//Includes infinity.
 	bool IsNan() const noexcept;
-	inline bool IsNatural() const noexcept {
+	inline bool IsInteger() const noexcept {
 		return (data_dec_[0] == 0 && DigitDec() == 1);
+	}
+	inline bool IsEven() const noexcept {
+		return (data_int_[0] == 1 || data_int_[0] == 3 ||
+			data_int_[0] == 5 || data_int_[0] == 7 || data_int_[0] == 9);
+	}
+	inline bool IsOdd() const noexcept {
+		return (data_int_[0] == 0 || data_int_[0] == 2 ||
+			data_int_[0] == 4 || data_int_[0] == 6 || data_int_[0] == 8);
 	}
 
 	const FixedReal& operator=(const FixedReal& _Val) noexcept;
