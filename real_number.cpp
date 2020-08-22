@@ -1155,26 +1155,33 @@ FixedReal FixedReal::RoundDown(const int _digit) noexcept {
 }
 
 
-FixedReal Power(const real_number::FixedReal& base, const FixedReal& exponent) noexcept {
-	if (exponent.IsNatural()) {
-		/*FixedReal answer{ 1 };
-		if(base==0){return 0;}
-		if(exponent==0)return 1;
-		if (base == 10) {
-			return (answer << _index);
-		}
-		if (_index > 0) {
-			for (int i = _index - 1;i >= 0;i--) {
-				answer *= base;
-			}
-		}
-		else {
-			for (int i = -1 * _index - 1;i >= 0;i--) {
-				answer /= base;
-			}
-		}
-		return answer;*/
+Real Power(const real_number::Real& base, const int index) noexcept {
+	if ((base == real_number_value::zero && index == 0) || base.data_dec_ == nullptr) {
+		return real_number_value::NaN;
 	}
+	if (base.infinity_bit_) {
+		if (base.sign_ || index & 1) {
+			return real_number_value::infinity_negative;
+		}
+		return real_number_value::infinity;
+	}
+	Real answer{ 1 };
+	if (index == 0) {
+		return answer;
+	}
+	if (base == 10) {
+		return (answer << index);
+	}
+	if (index > 0) {
+		for (int i = index - 1;i >= 0;i--) {
+			answer *= base;
+		}
+		return answer;
+	}
+	for (int i = -1 * index - 1;i >= 0;i--) {
+		answer /= base;
+	}
+	return answer;
 }
 FixedReal PowerOfTen(const int index) noexcept {
 	FixedReal answer{ 1 };
