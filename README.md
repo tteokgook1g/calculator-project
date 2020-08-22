@@ -1,5 +1,5 @@
 # Calculator Project
-# Version 1.0.3 alpha
+# Version 1.0.3 released
 # Updates
 ## real_number.h : Changed class Real to class FixedReal
 ## real_number.h : Deleted namespace real_number_value
