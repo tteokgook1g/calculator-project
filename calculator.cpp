@@ -39,17 +39,17 @@ std::istream& operator>>(std::istream& _Istr, Calculator& val) noexcept {
 	}
 	if (temp.find("roundoff") != std::string::npos) {
 		temp.erase(temp.find("roundoff"), 8);
-		val.RoundOff(static_cast<int>(real_number::Real(temp)));
+		val.RoundOff(static_cast<int>(real_number::FixedReal(temp)));
 		return _Istr;
 	}
 	if (temp.find("roundup") != std::string::npos) {
 		temp.erase(temp.find("roundup"), 7);
-		val.RoundUp(static_cast<int>(real_number::Real(temp)));
+		val.RoundUp(static_cast<int>(real_number::FixedReal(temp)));
 		return _Istr;
 	}
 	if (temp.find("rounddown") != std::string::npos) {
 		temp.erase(temp.find("rounddown"), 9);
-		val.RoundDown(static_cast<int>(real_number::Real(temp)));
+		val.RoundDown(static_cast<int>(real_number::FixedReal(temp)));
 		return _Istr;
 	}
 	if (temp.find("round") != std::string::npos) {
@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& _Istr, Calculator& val) noexcept {
 			val.RoundOff(-3);
 			return _Istr;
 		}
-		val.RoundOff(static_cast<int>(real_number::Real(temp)));
+		val.RoundOff(static_cast<int>(real_number::FixedReal(temp)));
 		return _Istr;
 	}
 	if (val.expression_.Value() == 0) {

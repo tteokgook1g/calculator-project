@@ -87,20 +87,20 @@ void Expression::InfixToPostfix() noexcept {
 }
 void Expression::ExpressionCalculate() noexcept {
 	if (postfix_expression_.at(0).type_ == ComponentType::kInvalid) {
-		value_of_expression_ = real_number::real_number_value::NaN;
+		value_of_expression_ = real_number::FixedReal(nullptr);
 		return;
 	}
-	std::stack<real_number::Real> numbers;
-	real_number::Real temp1, temp2;
+	std::stack<real_number::FixedReal> numbers;
+	real_number::FixedReal temp1, temp2;
 	for (size_t i = 0;i != postfix_expression_.size();i++) {
 		switch (postfix_expression_.at(i).type_)
 		{
 		case ComponentType::kNumber:
-			numbers.push(real_number::Real(postfix_expression_.at(i).value_));
+			numbers.push(real_number::FixedReal(postfix_expression_.at(i).value_));
 			continue;
 		case ComponentType::kUnaryOperator:
 			if (numbers.empty()) {
-				value_of_expression_ = real_number::real_number_value::NaN;
+				value_of_expression_ = real_number::FixedReal(nullptr);
 				return;
 			}
 			temp1 = numbers.top();
@@ -109,7 +109,7 @@ void Expression::ExpressionCalculate() noexcept {
 			continue;
 		case ComponentType::kBinaryOperator:
 			if (numbers.size() < 2) {
-				value_of_expression_ = real_number::real_number_value::NaN;
+				value_of_expression_ = real_number::FixedReal(nullptr);
 				return;
 			}
 			temp2 = numbers.top();
@@ -138,7 +138,7 @@ void Expression::ExpressionCalculate() noexcept {
 	}
 	else
 	{
-		value_of_expression_ = real_number::real_number_value::NaN;
+		value_of_expression_ = real_number::FixedReal(nullptr);
 	}
 }
 
@@ -320,7 +320,7 @@ std::string Expression::PostfixExpression() const noexcept {
 	}
 	return answer;
 }
-real_number::Real Expression::Value() const noexcept {
+real_number::FixedReal Expression::Value() const noexcept {
 	return value_of_expression_;
 }
 void Expression::SquareRoot() noexcept {
