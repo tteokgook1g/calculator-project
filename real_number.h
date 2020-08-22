@@ -11,7 +11,8 @@
 REAL_NUMBER_BEGIN
 
 //This class is about real number.
-class Real {
+//This class is fixed point.
+class FixedReal {
 protected:
 	//data
 	//true is -,false is +,0 is +
@@ -21,7 +22,7 @@ protected:
 	base::MySize_t reserved_size_;
 	bool infinity_bit_;
 
-	explicit Real(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept;
+	explicit FixedReal(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept;
 	//Error occurs when someone tries to reference out of range.
 	short& operator[](const int index) const;
 public:
@@ -31,27 +32,27 @@ public:
 
 
 	//constructor
-	Real() noexcept;
-	explicit Real(bool _Sign, bool _INFINITYbit) noexcept;
-	Real(const std::string& _Val) noexcept;
-	Real(const bool _Val) noexcept;
-	Real(const short _Val) noexcept;
-	Real(const int _Val) noexcept;
-	Real(const long _Val) noexcept;
-	Real(const long long& _Val) noexcept;
-	Real(const unsigned short _Val) noexcept;
-	Real(const unsigned int _Val) noexcept;
-	Real(const unsigned long _Val) noexcept;
-	Real(const unsigned long long& _Val) noexcept;
-	Real(const float _Val) noexcept;
-	Real(const double& _Val) noexcept;
-	Real(const long double& _Val) noexcept;
-	Real(const char* const _Val) noexcept;
-	Real(const std::nullptr_t& _nullptr) noexcept;
-	Real(const Real& _Val) noexcept;
-	Real(Real&& _Val) noexcept;
+	FixedReal() noexcept;
+	explicit FixedReal(bool _Sign, bool _INFINITYbit) noexcept;
+	FixedReal(const std::string& _Val) noexcept;
+	FixedReal(const bool _Val) noexcept;
+	FixedReal(const short _Val) noexcept;
+	FixedReal(const int _Val) noexcept;
+	FixedReal(const long _Val) noexcept;
+	FixedReal(const long long& _Val) noexcept;
+	FixedReal(const unsigned short _Val) noexcept;
+	FixedReal(const unsigned int _Val) noexcept;
+	FixedReal(const unsigned long _Val) noexcept;
+	FixedReal(const unsigned long long& _Val) noexcept;
+	FixedReal(const float _Val) noexcept;
+	FixedReal(const double& _Val) noexcept;
+	FixedReal(const long double& _Val) noexcept;
+	FixedReal(const char* const _Val) noexcept;
+	FixedReal(const std::nullptr_t& _nullptr) noexcept;
+	FixedReal(const FixedReal& _Val) noexcept;
+	FixedReal(FixedReal&& _Val) noexcept;
 
-	~Real();
+	~FixedReal();
 
 	//Reserves places that datas will be saved.
 	void Reserve(const base::MySize_t _Size) noexcept;
@@ -71,37 +72,40 @@ public:
 	//Check whether it is not a number or a number.
 	//Includes infinity.
 	bool IsNan() const noexcept;
+	inline bool IsNatural() const noexcept {
+		return (data_dec_[0] == 0 && DigitDec() == 1);
+	}
 
-	const Real& operator=(const Real& _Val) noexcept;
-	const Real& operator=(Real&& _Val) noexcept;
-	const Real& operator+=(const Real& _Val) noexcept;
-	const Real& operator-=(const Real& _Val) noexcept;
-	const Real& operator*=(const Real& _Val) noexcept;
-	const Real& operator/=(const Real& _Val) noexcept;
-	const Real& operator<<=(const int _Val) noexcept;
-	const Real& operator>>=(const int _Val) noexcept;
+	const FixedReal& operator=(const FixedReal& _Val) noexcept;
+	const FixedReal& operator=(FixedReal&& _Val) noexcept;
+	const FixedReal& operator+=(const FixedReal& _Val) noexcept;
+	const FixedReal& operator-=(const FixedReal& _Val) noexcept;
+	const FixedReal& operator*=(const FixedReal& _Val) noexcept;
+	const FixedReal& operator/=(const FixedReal& _Val) noexcept;
+	const FixedReal& operator<<=(const int _Val) noexcept;
+	const FixedReal& operator>>=(const int _Val) noexcept;
 
-	const Real operator<<(const int index) const noexcept;
-	const Real operator>>(const int index) const noexcept;
-	const Real& operator++() noexcept;
-	const Real operator++(int) noexcept;
-	const Real& operator--() noexcept;
-	const Real operator--(int) noexcept;
-	const Real operator-() const noexcept;
+	const FixedReal operator<<(const int index) const noexcept;
+	const FixedReal operator>>(const int index) const noexcept;
+	const FixedReal& operator++() noexcept;
+	const FixedReal operator++(int) noexcept;
+	const FixedReal& operator--() noexcept;
+	const FixedReal operator--(int) noexcept;
+	const FixedReal operator-() const noexcept;
 
 
-	friend std::istream& operator>>(std::istream& _Istr, Real& _Val) noexcept;
-	friend std::ostream& operator<<(std::ostream& _Ostr, const Real& _Val) noexcept;
-	friend Real operator+(const Real& _Val1, const Real& _Val2);
-	friend Real operator-(const Real& _Val1, const Real& _Val2);
-	friend Real operator*(const Real& _Val1, const Real& _Val2);
-	friend Real operator/(const Real& _Val1, const Real& _Val2);
-	friend bool operator<(const Real& _Val1, const Real& _Val2) noexcept;
-	friend bool operator>(const Real& _Val1, const Real& _Val2) noexcept;
-	friend bool operator<=(const Real& _Val1, const Real& _Val2) noexcept;
-	friend bool operator>=(const Real& _Val1, const Real& _Val2) noexcept;
-	friend bool operator==(const Real& _Val1, const Real& _Val2) noexcept;
-	friend bool operator!=(const Real& _Val1, const Real& _Val2) noexcept;
+	friend std::istream& operator>>(std::istream& _Istr, FixedReal& _Val) noexcept;
+	friend std::ostream& operator<<(std::ostream& _Ostr, const FixedReal& _Val) noexcept;
+	friend FixedReal operator+(const FixedReal& _Val1, const FixedReal& _Val2);
+	friend FixedReal operator-(const FixedReal& _Val1, const FixedReal& _Val2);
+	friend FixedReal operator*(const FixedReal& _Val1, const FixedReal& _Val2);
+	friend FixedReal operator/(const FixedReal& _Val1, const FixedReal& _Val2);
+	friend bool operator<(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
+	friend bool operator>(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
+	friend bool operator<=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
+	friend bool operator>=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
+	friend bool operator==(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
+	friend bool operator!=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept;
 
 
 	explicit operator std::string() const noexcept;
@@ -121,34 +125,27 @@ public:
 
 	//If someone tries to reference out of range, it returns 0.
 	short At(const int index) const;
-	Real RoundOff(const int _digit = 0) noexcept;
-	Real RoundUp(const int _digit = 0) noexcept;
-	Real RoundDown(const int _digit = 0) noexcept;
+	FixedReal RoundOff(const int _digit = 0) noexcept;
+	FixedReal RoundUp(const int _digit = 0) noexcept;
+	FixedReal RoundDown(const int _digit = 0) noexcept;
 
 
-	friend Real Power(const Real& base, const int index) noexcept;
-	friend Real PowerOfTen(const int index) noexcept;
-	friend Real SquareRoot(const Real& _Val) noexcept;
-	friend Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept;
-	friend Real RoundOff(const Real& _Val, const int _digit) noexcept;
-	friend Real RoundUp(const Real& _Val, const int _digit) noexcept;
-	friend Real RoundDown(const Real& _Val, const int _digit) noexcept;
+	friend FixedReal Power(const FixedReal& base, const FixedReal& index) noexcept;
+	friend FixedReal PowerOfTen(const int index) noexcept;
+	friend FixedReal SquareRoot(const FixedReal& _Val) noexcept;
+	friend FixedReal PrintSquareRoot(const FixedReal& _Val, std::ostream& _Ostr) noexcept;
+	friend FixedReal RoundOff(const FixedReal& _Val, const int _digit) noexcept;
+	friend FixedReal RoundUp(const FixedReal& _Val, const int _digit) noexcept;
+	friend FixedReal RoundDown(const FixedReal& _Val, const int _digit) noexcept;
 };
 
-Real Power(const Real& base, const int index) noexcept;
-Real PowerOfTen(const int index) noexcept;
-Real SquareRoot(const Real& _Val) noexcept;
-Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr = std::cout) noexcept;
-Real RoundOff(const Real& _Val, const int _digit = 0) noexcept;
-Real RoundUp(const Real& _Val, const int _digit = 0) noexcept;
-Real RoundDown(const Real& _Val, const int _digit = 0) noexcept;
-
-namespace real_number_value {
-	const real_number::Real NaN{ nullptr };
-	const real_number::Real infinity{ 0, 1 };
-	const real_number::Real infinity_negative{ 1, 1 };
-	const real_number::Real zero{};
-}
+FixedReal Power(const FixedReal& base, const FixedReal& index) noexcept;
+FixedReal PowerOfTen(const int index) noexcept;
+FixedReal SquareRoot(const FixedReal& _Val) noexcept;
+FixedReal PrintSquareRoot(const FixedReal& _Val, std::ostream& _Ostr = std::cout) noexcept;
+FixedReal RoundOff(const FixedReal& _Val, const int _digit = 0) noexcept;
+FixedReal RoundUp(const FixedReal& _Val, const int _digit = 0) noexcept;
+FixedReal RoundDown(const FixedReal& _Val, const int _digit = 0) noexcept;
 
 REAL_NUMBER_END
 
