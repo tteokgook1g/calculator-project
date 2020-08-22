@@ -10,7 +10,7 @@
 
 
 REAL_NUMBER_BEGIN
-Real::Real(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept :sign_(_Sign), infinity_bit_(0) {
+FixedReal::FixedReal(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept :sign_(_Sign), infinity_bit_(0) {
 	std::string val{ std::to_string(_Val) };
 	reserved_size_ = static_cast<base::MySize_t>(val.length());
 	data_int_ = new short[reserved_size_];
@@ -21,7 +21,7 @@ Real::Real(const unsigned long long& _Val, bool _Sign, bool _Check2) noexcept :s
 	}
 }
 
-Real::Real() noexcept :infinity_bit_(0), sign_(0), reserved_size_(10) {
+FixedReal::FixedReal() noexcept :infinity_bit_(0), sign_(0), reserved_size_(10) {
 	data_int_ = new short[10];
 	data_dec_ = new short[10];
 	for (int i = 9;i >= 0;i--) {
@@ -29,7 +29,7 @@ Real::Real() noexcept :infinity_bit_(0), sign_(0), reserved_size_(10) {
 		data_dec_[i] = 0;
 	}
 }
-Real::Real(bool _Sign, bool _INFINITYbit) noexcept : infinity_bit_(_INFINITYbit) {
+FixedReal::FixedReal(bool _Sign, bool _INFINITYbit) noexcept : infinity_bit_(_INFINITYbit) {
 	if (infinity_bit_) {
 		sign_ = _Sign;
 		reserved_size_ = 0;
@@ -46,7 +46,7 @@ Real::Real(bool _Sign, bool _INFINITYbit) noexcept : infinity_bit_(_INFINITYbit)
 		data_dec_[i] = 0;
 	}
 }
-Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0) {
+FixedReal::FixedReal(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0) {
 	data_int_ = nullptr;
 	data_dec_ = nullptr;
 	std::string val = _Val;
@@ -54,19 +54,19 @@ Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserv
 	base::DeleteBlank(val);
 	base::CapitalToSmall(val);
 	if (_Val.find("-inf") != std::string::npos || _Val.find("-infinity") != std::string::npos) {
-		*this = real_number_value::infinity_negative;
+		*this = FixedReal(true, true);
 		return;
 	}
 	if (_Val.find("inf") != std::string::npos || _Val.find("infinity") != std::string::npos) {
-		*this = real_number_value::infinity;
+		*this = FixedReal(false, true);
 		return;
 	}
 	if (_Val.find("nan") != std::string::npos) {
-		*this = real_number_value::NaN;
+		*this = FixedReal(nullptr);
 		return;
 	}
 	if (val.length() == 0) {
-		*this = real_number_value::zero;
+		*this = 0;
 		return;
 	}
 	switch (val.at(0))
@@ -90,7 +90,7 @@ Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserv
 	if (!base::IsNumber(val)) {
 		std::cout << "It isn't a number." << std::endl;
 		std::cout << "It'll be NaN instead." << std::endl;
-		*this = real_number_value::NaN;
+		*this = FixedReal(nullptr);
 		return;
 	}
 	std::stack<short> num_int;
@@ -138,67 +138,58 @@ Real::Real(const std::string& _Val) noexcept :infinity_bit_(0), sign_(0), reserv
 	}
 	sign_ = false;
 }
-Real::Real(const short _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+FixedReal::FixedReal(const short _Val) noexcept {
+	if (_Val >= 0) *this = std::move(FixedReal(_Val, false, true));
+	else *this = std::move(FixedReal(static_cast<long long>(_Val) * -1, true, true));
 }
-Real::Real(const int _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+FixedReal::FixedReal(const int _Val) noexcept {
+	if (_Val >= 0) *this = std::move(FixedReal(_Val, false, true));
+	else *this = std::move(FixedReal(static_cast<long long>(_Val) * -1, true, true));
 }
-Real::Real(const long _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(static_cast<long long>(_Val) * -1, true, true));
+FixedReal::FixedReal(const long _Val) noexcept {
+	if (_Val >= 0) *this = std::move(FixedReal(_Val, false, true));
+	else *this = std::move(FixedReal(static_cast<long long>(_Val) * -1, true, true));
 }
-Real::Real(const long long& _Val) noexcept {
-	if (_Val >= 0) *this = std::move(Real(_Val, false, true));
-	else *this = std::move(Real(_Val * -1, true, true));
+FixedReal::FixedReal(const long long& _Val) noexcept {
+	if (_Val >= 0) *this = std::move(FixedReal(_Val, false, true));
+	else *this = std::move(FixedReal(_Val * -1, true, true));
 }
-Real::Real(const unsigned short _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
+FixedReal::FixedReal(const unsigned short _Val) noexcept {
+	*this = std::move(FixedReal(_Val, false, true));
 }
-Real::Real(const unsigned int _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
+FixedReal::FixedReal(const unsigned int _Val) noexcept {
+	*this = std::move(FixedReal(_Val, false, true));
 }
-Real::Real(const unsigned long _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
+FixedReal::FixedReal(const unsigned long _Val) noexcept {
+	*this = std::move(FixedReal(_Val, false, true));
 }
-Real::Real(const unsigned long long& _Val) noexcept {
-	*this = std::move(Real(_Val, false, true));
+FixedReal::FixedReal(const unsigned long long& _Val) noexcept {
+	*this = std::move(FixedReal(_Val, false, true));
 }
-Real::Real(const float _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * INFINITY) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
+FixedReal::FixedReal(const float _Val) noexcept {
+	*this = std::move(FixedReal{ std::to_string(_Val) });
 }
-Real::Real(const double& _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
+FixedReal::FixedReal(const double& _Val) noexcept {
+	*this = std::move(FixedReal{ std::to_string(_Val) });
 }
-Real::Real(const long double& _Val) noexcept {
-	if (_Val == INFINITY) *this = std::move(Real{ false, true });
-	else if (_Val == -1 * static_cast<long long>(INFINITY)) *this = std::move(Real{ true, true });
-	else if (_Val == INFINITY * 0.0) *this = std::move(Real{ nullptr });
-	else *this = std::move(Real{ std::to_string(_Val) });
+FixedReal::FixedReal(const long double& _Val) noexcept {
+	*this = std::move(FixedReal{ std::to_string(_Val) });
 }
-Real::Real(const bool _Val) noexcept {
-	*this = std::move(Real{});
+FixedReal::FixedReal(const bool _Val) noexcept {
+	*this = std::move(FixedReal{});
 	if (_Val) {
 		data_int_[0] = 1;
 	}
 }
-Real::Real(const char* const _Val) noexcept {
-	*this = std::move(Real{ std::string(_Val) });
+FixedReal::FixedReal(const char* const _Val) noexcept {
+	*this = std::move(FixedReal{ std::string(_Val) });
 }
-Real::Real(const std::nullptr_t& _nullptr) noexcept
+FixedReal::FixedReal(const std::nullptr_t& _nullptr) noexcept
 	:infinity_bit_(0), sign_(0), reserved_size_(0), data_int_(nullptr), data_dec_(nullptr) {}
-Real::Real(const Real& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0), data_int_(nullptr), data_dec_(nullptr) {
+FixedReal::FixedReal(const FixedReal& _Val) noexcept :infinity_bit_(0), sign_(0), reserved_size_(0), data_int_(nullptr), data_dec_(nullptr) {
 	*this = _Val;
 }
-Real::Real(Real&& _Val) noexcept {
+FixedReal::FixedReal(FixedReal&& _Val) noexcept {
 	sign_ = _Val.sign_;
 	infinity_bit_ = _Val.infinity_bit_;
 	reserved_size_ = _Val.reserved_size_;
@@ -208,7 +199,7 @@ Real::Real(Real&& _Val) noexcept {
 	_Val.data_dec_ = nullptr;
 }
 
-Real::~Real() {
+FixedReal::~FixedReal() {
 	if (data_int_ != nullptr) {
 		delete[] data_int_;
 	}
@@ -218,7 +209,7 @@ Real::~Real() {
 }
 
 
-void Real::Reserve(const base::MySize_t _Size) noexcept {
+void FixedReal::Reserve(const base::MySize_t _Size) noexcept {
 	if (infinity_bit_ || reserved_size_ >= _Size) {
 		return;
 	}
@@ -231,7 +222,7 @@ void Real::Reserve(const base::MySize_t _Size) noexcept {
 			data_dec_[i] = 0;
 		}
 	}
-	Real temp(std::move(*this));
+	FixedReal temp(std::move(*this));
 	reserved_size_ = _Size;
 	data_int_ = new short[reserved_size_];
 	data_dec_ = new short[reserved_size_];
@@ -245,7 +236,7 @@ void Real::Reserve(const base::MySize_t _Size) noexcept {
 		data_dec_[i] = 0;
 	}
 }
-void Real::Sizeup() noexcept {
+void FixedReal::Sizeup() noexcept {
 	if (reserved_size_ > base::kMaxSizeVal / 2) {
 		Reserve(base::kMaxSizeVal);
 		return;
@@ -254,7 +245,7 @@ void Real::Sizeup() noexcept {
 }
 
 
-int Real::DigitInt() const noexcept {
+int FixedReal::DigitInt() const noexcept {
 	if (infinity_bit_) {
 		return return_INFINITY;
 	}
@@ -273,7 +264,7 @@ int Real::DigitInt() const noexcept {
 	}
 	return static_cast<base::MySize_t>(i);
 }
-int Real::DigitDec() const noexcept {
+int FixedReal::DigitDec() const noexcept {
 	if (infinity_bit_) {
 		return return_INFINITY;
 	}
@@ -292,10 +283,10 @@ int Real::DigitDec() const noexcept {
 	}
 	return static_cast<base::MySize_t>(i);
 }
-int Real::ReservedSizeCurrent() const noexcept {
+int FixedReal::ReservedSizeCurrent() const noexcept {
 	return reserved_size_;
 }
-int Real::DigitHighest() const noexcept {
+int FixedReal::DigitHighest() const noexcept {
 	if (infinity_bit_) {
 		return return_INFINITY;
 	}
@@ -315,17 +306,17 @@ int Real::DigitHighest() const noexcept {
 	}
 	return 0;
 }
-bool Real::IsInfinity() const noexcept {
+bool FixedReal::IsInfinity() const noexcept {
 	return infinity_bit_;
 }
-bool Real::IsNan() const noexcept {
+bool FixedReal::IsNan() const noexcept {
 	if (data_dec_ == nullptr) {
 		return true;
 	}
 	return false;
 }
 
-short& Real::operator[](const int index) const {
+short& FixedReal::operator[](const int index) const {
 	if (infinity_bit_) {
 		std::cout << "REFERENCE INFINITY" << std::endl;
 		std::cout << "ERROR position : " << __FUNCTION__ << std::endl;
@@ -351,14 +342,14 @@ short& Real::operator[](const int index) const {
 	return data_dec_[-1 * index - 1];
 }
 
-const Real& Real::operator=(const Real& _Val) noexcept {
+const FixedReal& FixedReal::operator=(const FixedReal& _Val) noexcept {
 	if (_Val.infinity_bit_) {
-		*this = std::move(Real{ 0, 1 });
+		*this = std::move(FixedReal{ 0, 1 });
 		sign_ = _Val.sign_;
 		return *this;
 	}
 	if (_Val.data_int_ == nullptr || _Val.data_dec_ == nullptr) {
-		*this = std::move(Real{ nullptr });
+		*this = std::move(FixedReal{ nullptr });
 		return *this;
 	}
 	sign_ = _Val.sign_;
@@ -371,7 +362,7 @@ const Real& Real::operator=(const Real& _Val) noexcept {
 	}
 	return *this;
 }
-const Real& Real::operator=(Real&& _Val) noexcept {
+const FixedReal& FixedReal::operator=(FixedReal&& _Val) noexcept {
 	sign_ = _Val.sign_;
 	infinity_bit_ = _Val.infinity_bit_;
 	reserved_size_ = _Val.reserved_size_;
@@ -381,39 +372,39 @@ const Real& Real::operator=(Real&& _Val) noexcept {
 	_Val.data_dec_ = nullptr;
 	return *this;
 }
-const Real& Real::operator+=(const Real& _Val) noexcept {
+const FixedReal& FixedReal::operator+=(const FixedReal& _Val) noexcept {
 	(*this) = (*this) + _Val;
 	return *this;
 }
-const Real& Real::operator-=(const Real& _Val) noexcept {
+const FixedReal& FixedReal::operator-=(const FixedReal& _Val) noexcept {
 	(*this) = (*this) - _Val;
 	return *this;
 }
-const Real& Real::operator*=(const Real& _Val) noexcept {
+const FixedReal& FixedReal::operator*=(const FixedReal& _Val) noexcept {
 	(*this) = (*this) * _Val;
 	return *this;
 }
-const Real& Real::operator/=(const Real& _Val) noexcept {
+const FixedReal& FixedReal::operator/=(const FixedReal& _Val) noexcept {
 	(*this) = (*this) / _Val;
 	return *this;
 }
-const Real& Real::operator<<=(const int _Val) noexcept {
+const FixedReal& FixedReal::operator<<=(const int _Val) noexcept {
 	(*this) = (*this) << _Val;
 	return *this;
 }
-const Real& Real::operator>>=(const int _Val) noexcept {
+const FixedReal& FixedReal::operator>>=(const int _Val) noexcept {
 	(*this) = (*this) >> _Val;
 	return *this;
 }
 
-const Real Real::operator<<(const int index) const noexcept {
+const FixedReal FixedReal::operator<<(const int index) const noexcept {
 	if (data_dec_ == nullptr || index == 0) {
 		return *this;
 	}
 	if (index < 0) {
 		return (*this) >> (-1 * index);
 	}
-	Real answer{ *this };
+	FixedReal answer{ *this };
 	answer.Reserve(this->reserved_size_ + index);
 	for (int i = this->DigitInt() - 1;i >= -1 * this->DigitDec();i--) {
 		answer[i + index] = answer[i];
@@ -421,14 +412,14 @@ const Real Real::operator<<(const int index) const noexcept {
 	}
 	return answer;
 }
-const Real Real::operator>>(const int index) const noexcept {
+const FixedReal FixedReal::operator>>(const int index) const noexcept {
 	if (data_dec_ == nullptr || index == 0) {
 		return *this;
 	}
 	if (index < 0) {
 		return (*this) << (-1 * index);
 	}
-	Real answer{ *this };
+	FixedReal answer{ *this };
 	answer.Reserve(this->reserved_size_ + index);
 	for (int i = -1 * this->DigitDec();i < this->DigitInt();i++) {
 		answer[i - index] = answer[i];
@@ -436,7 +427,7 @@ const Real Real::operator>>(const int index) const noexcept {
 	}
 	return answer;
 }
-const Real& Real::operator++() noexcept {
+const FixedReal& FixedReal::operator++() noexcept {
 	if (data_int_[0] != 9) {
 		data_int_[0] += 1;
 	}
@@ -446,8 +437,8 @@ const Real& Real::operator++() noexcept {
 	}
 	return *this;
 }
-const Real Real::operator++(int) noexcept {
-	Real temp{ *this };
+const FixedReal FixedReal::operator++(int) noexcept {
+	FixedReal temp{ *this };
 	if (data_int_[0] != 9) {
 		data_int_[0] += 1;
 	}
@@ -457,7 +448,7 @@ const Real Real::operator++(int) noexcept {
 	}
 	return temp;
 }
-const Real& Real::operator--() noexcept {
+const FixedReal& FixedReal::operator--() noexcept {
 	if (data_int_[0] != 0) {
 		data_int_[0] -= 1;
 	}
@@ -467,8 +458,8 @@ const Real& Real::operator--() noexcept {
 	}
 	return *this;
 }
-const Real Real::operator--(int) noexcept {
-	Real temp(*this);
+const FixedReal FixedReal::operator--(int) noexcept {
+	FixedReal temp(*this);
 	if (data_int_[0] != 0) {
 		data_int_[0] -= 1;
 	}
@@ -478,20 +469,20 @@ const Real Real::operator--(int) noexcept {
 	}
 	return temp;
 }
-const Real Real::operator-() const noexcept {
-	Real answer{ *this };
+const FixedReal FixedReal::operator-() const noexcept {
+	FixedReal answer{ *this };
 	answer.sign_ = !answer.sign_;
 	return answer;
 }
 
 
-std::istream& operator>>(std::istream& _Istr, Real& _Reference) noexcept {
+std::istream& operator>>(std::istream& _Istr, FixedReal& _Reference) noexcept {
 	std::string _val;
 	_Istr >> _val;
-	_Reference = std::move(Real{ _val });
+	_Reference = std::move(FixedReal{ _val });
 	return _Istr;
 }
-std::ostream& operator<<(std::ostream& _Ostr, const Real& _Val) noexcept {
+std::ostream& operator<<(std::ostream& _Ostr, const FixedReal& _Val) noexcept {
 	if (_Val.data_dec_ == nullptr) {
 		if (_Val.infinity_bit_) {
 			if (_Val.sign_) {
@@ -519,14 +510,14 @@ std::ostream& operator<<(std::ostream& _Ostr, const Real& _Val) noexcept {
 	}
 	return _Ostr;
 }
-Real operator+(const Real& _Val1, const Real& _Val2) {
+FixedReal operator+(const FixedReal& _Val1, const FixedReal& _Val2) {
 	if (_Val1.data_dec_ == nullptr || _Val2.data_dec_ == nullptr) {
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val1.infinity_bit_) {
 		if (_Val2.infinity_bit_) {
 			if (_Val1.sign_ ^ _Val2.sign_) {
-				return real_number_value::NaN;
+				return FixedReal(nullptr);
 			}
 		}
 		return _Val1;
@@ -540,19 +531,19 @@ Real operator+(const Real& _Val1, const Real& _Val2) {
 		&& (_Val1.At(base::kMaxSizeVal - 1) + _Val2.At(base::kMaxSizeVal - 1) > 9)
 		&& _Val1.sign_ == _Val2.sign_) {
 		if (_Val1.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
 		else
 		{
-			return real_number_value::infinity;
+			return FixedReal(false, true);
 		}
 	}
 	if (to_alloc > base::kMaxSizeVal) {
 		to_alloc = base::kMaxSizeVal;
 	}
-	Real answer{};
-	Real val1{ _Val1 };
-	Real val2{ _Val2 };
+	FixedReal answer{};
+	FixedReal val1{ _Val1 };
+	FixedReal val2{ _Val2 };
 	if (val1.sign_) {
 		for (int i = -1 * val1.DigitDec();i < val1.DigitInt();i++) {
 			val1[i] *= -1;
@@ -603,32 +594,32 @@ Real operator+(const Real& _Val1, const Real& _Val2) {
 	}
 	return answer;
 }
-Real operator-(const Real& _Val1, const Real& _Val2) {
-	Real val2{ _Val2 };
+FixedReal operator-(const FixedReal& _Val1, const FixedReal& _Val2) {
+	FixedReal val2{ _Val2 };
 	val2.sign_ = 1 - val2.sign_;
 	return _Val1 + val2;
 }
-Real operator*(const Real& _Val1, const Real& _Val2) {
+FixedReal operator*(const FixedReal& _Val1, const FixedReal& _Val2) {
 	if (_Val1.data_dec_ == nullptr || _Val2.data_dec_ == nullptr) {
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val1.infinity_bit_ && _Val2.infinity_bit_) {
 		if (_Val1.sign_ ^ _Val2.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
 	if (_Val1.infinity_bit_ || _Val2.infinity_bit_) {
-		if (_Val1 == real_number_value::zero || _Val2 == real_number_value::zero) {
-			return real_number_value::NaN;
+		if (_Val1 == 0 || _Val2 == 0) {
+			return FixedReal(nullptr);
 		}
 		if (_Val1.sign_ ^ _Val2.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
-	if (_Val1 == real_number_value::zero || _Val2 == real_number_value::zero) {
-		return real_number_value::zero;
+	if (_Val1 == 0 || _Val2 == 0) {
+		return 0;
 	}
 	if (_Val1.DigitInt() + _Val2.DigitInt() > base::kMaxSizeVal) {
 		std::cout << "$ERROR$ number is too big" << std::endl;
@@ -637,7 +628,7 @@ Real operator*(const Real& _Val1, const Real& _Val2) {
 		throw std::exception{};
 	}
 	const int to_alloc = std::max(_Val1.DigitInt() + _Val2.DigitInt(), _Val1.DigitDec() + _Val2.DigitDec());
-	Real answer{};
+	FixedReal answer{};
 	answer.Reserve(to_alloc);
 	if (_Val1.sign_ ^ _Val2.sign_) {
 		answer.sign_ = 1;
@@ -678,61 +669,61 @@ Real operator*(const Real& _Val1, const Real& _Val2) {
 	}
 	return answer;
 }
-Real operator/(const Real& _Val1, const Real& _Val2) {
+FixedReal operator/(const FixedReal& _Val1, const FixedReal& _Val2) {
 	if (_Val1.data_dec_ == nullptr || _Val2.data_dec_ == nullptr) {
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val1.infinity_bit_ && _Val2.infinity_bit_) {
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val1.infinity_bit_) {
 		if (_Val1.sign_ ^ _Val2.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
 	if (_Val2.infinity_bit_) {
-		return real_number_value::zero;
+		return 0;
 	}
-	if (_Val2 == real_number_value::zero) {
-		if (_Val1 == real_number_value::zero) {
-			return real_number_value::NaN;
+	if (_Val2 == 0) {
+		if (_Val1 == 0) {
+			return FixedReal(nullptr);
 		}
 		if (_Val1.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
-	if (_Val1 == real_number_value::zero) {
-		return real_number_value::zero;
+	if (_Val1 == 0) {
+		return 0;
 	}
 	const int to_alloc = std::max(base::kAccuracy, static_cast<int>(_Val1.DigitInt() + _Val2.DigitDec()));
 	if (to_alloc > base::kMaxSizeVal) {
 		if (_Val1.sign_ ^ _Val2.sign_) {
-			return real_number_value::infinity_negative;
+			return FixedReal(true, true);
 		}
 		else
 		{
-			return real_number_value::infinity;
+			return FixedReal(false, true);
 		}
 	}
-	Real answer{};
+	FixedReal answer{};
 	answer.Reserve(to_alloc);
 	if (_Val1.sign_ ^ _Val2.sign_) {
 		answer.sign_ = 1;
 	}
-	Real remainder{ _Val1 };
-	Real divisor{ _Val2 };
+	FixedReal remainder{ _Val1 };
+	FixedReal divisor{ _Val2 };
 	remainder.sign_ = false;
 	divisor.sign_ = false;
-	Real k{};
+	FixedReal k{};
 	for (int i = _Val1.DigitInt() + _Val2.DigitDec() - 1;i >= -1 * base::kAccuracy;i--) {
 		for (int j = 9;j > 0;j--) {
 			k = j * divisor * real_number::PowerOfTen(i);
 			if (remainder >= k) {
 				answer[i] = j;
 				remainder -= k;
-				if (remainder == real_number_value::zero) {
+				if (remainder == 0) {
 					return answer;
 				}
 				break;
@@ -741,7 +732,7 @@ Real operator/(const Real& _Val1, const Real& _Val2) {
 	}
 	return answer;
 }
-bool operator<(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator<(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	if (_Val1.data_dec_ == nullptr || _Val2.data_dec_ == nullptr) {
 		return false;
 	}
@@ -761,8 +752,8 @@ bool operator<(const Real& _Val1, const Real& _Val2) noexcept {
 		return !_Val2.sign_;
 	}
 	if (_Val1.sign_) {
-		Real val1{ _Val1 };
-		Real val2{ _Val2 };
+		FixedReal val1{ _Val1 };
+		FixedReal val2{ _Val2 };
 		val1.sign_ = false;
 		val2.sign_ = false;
 		if (val1 == val2) {
@@ -794,7 +785,7 @@ bool operator<(const Real& _Val1, const Real& _Val2) noexcept {
 	}
 	return false;
 }
-bool operator>(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator>(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	if (_Val1.data_dec_ == nullptr || _Val2.data_dec_ == nullptr) {
 		return false;
 	}
@@ -814,8 +805,8 @@ bool operator>(const Real& _Val1, const Real& _Val2) noexcept {
 		return !_Val1.sign_;
 	}
 	if (_Val1.sign_) {
-		Real val1{ _Val1 };
-		Real val2{ _Val2 };
+		FixedReal val1{ _Val1 };
+		FixedReal val2{ _Val2 };
 		val1.sign_ = false;
 		val2.sign_ = false;
 		if (val1 == val2) {
@@ -847,13 +838,13 @@ bool operator>(const Real& _Val1, const Real& _Val2) noexcept {
 	}
 	return false;
 }
-bool operator<=(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator<=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	return (_Val1 < _Val2 || _Val1 == _Val2);
 }
-bool operator>=(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator>=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	return (_Val1 > _Val2 || _Val1 == _Val2);
 }
-bool operator==(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator==(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	if (_Val1.infinity_bit_) {
 		if (_Val2.infinity_bit_) {
 			return !(_Val1.sign_ ^ _Val2.sign_);
@@ -890,12 +881,12 @@ bool operator==(const Real& _Val1, const Real& _Val2) noexcept {
 	}
 	return true;
 }
-bool operator!=(const Real& _Val1, const Real& _Val2) noexcept {
+bool operator!=(const FixedReal& _Val1, const FixedReal& _Val2) noexcept {
 	return !(_Val1 == _Val2);
 }
 
 
-Real::operator std::string() const noexcept {
+FixedReal::operator std::string() const noexcept {
 	if (infinity_bit_) {
 		if (sign_) {
 			return std::string{ "-INFINITY" };
@@ -922,13 +913,13 @@ Real::operator std::string() const noexcept {
 	}
 	return answer;
 }
-Real::operator bool() const noexcept {
-	if (*this == real_number_value::zero) {
+FixedReal::operator bool() const noexcept {
+	if (*this == 0) {
 		return false;
 	}
 	return true;
 }
-Real::operator short() const noexcept {
+FixedReal::operator short() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -947,7 +938,7 @@ Real::operator short() const noexcept {
 	}
 	return answer;
 }
-Real::operator unsigned short() const noexcept {
+FixedReal::operator unsigned short() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -963,7 +954,7 @@ Real::operator unsigned short() const noexcept {
 	}
 	return answer;
 }
-Real::operator int() const noexcept {
+FixedReal::operator int() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -982,7 +973,7 @@ Real::operator int() const noexcept {
 	}
 	return answer;
 }
-Real::operator unsigned int() const noexcept {
+FixedReal::operator unsigned int() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -998,7 +989,7 @@ Real::operator unsigned int() const noexcept {
 	}
 	return answer;
 }
-Real::operator long() const noexcept {
+FixedReal::operator long() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1017,7 +1008,7 @@ Real::operator long() const noexcept {
 	}
 	return answer;
 }
-Real::operator unsigned long() const noexcept {
+FixedReal::operator unsigned long() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1033,7 +1024,7 @@ Real::operator unsigned long() const noexcept {
 	}
 	return answer;
 }
-Real::operator long long() const noexcept {
+FixedReal::operator long long() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1052,7 +1043,7 @@ Real::operator long long() const noexcept {
 	}
 	return answer;
 }
-Real::operator unsigned long long() const noexcept {
+FixedReal::operator unsigned long long() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1068,7 +1059,7 @@ Real::operator unsigned long long() const noexcept {
 	}
 	return answer;
 }
-Real::operator float() const noexcept {
+FixedReal::operator float() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1078,7 +1069,7 @@ Real::operator float() const noexcept {
 	if (*this <= -1 * FLT_MAX) {
 		return -1 * FLT_MAX;
 	}
-	if (*this == real_number_value::zero) {
+	if (*this == 0) {
 		return 0.0f;
 	}
 	float answer = 0;
@@ -1090,7 +1081,7 @@ Real::operator float() const noexcept {
 	}
 	return answer;
 }
-Real::operator double() const noexcept {
+FixedReal::operator double() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1100,7 +1091,7 @@ Real::operator double() const noexcept {
 	if (*this <= -1 * DBL_MAX) {
 		return -1 * DBL_MAX;
 	}
-	if (*this == real_number_value::zero) {
+	if (*this == 0) {
 		return 0.0;
 	}
 	double answer = 0;
@@ -1112,7 +1103,7 @@ Real::operator double() const noexcept {
 	}
 	return answer;
 }
-Real::operator long double() const noexcept {
+FixedReal::operator long double() const noexcept {
 	if (data_dec_ == nullptr) {
 		return NULL;
 	}
@@ -1122,7 +1113,7 @@ Real::operator long double() const noexcept {
 	if (*this <= -1 * LDBL_MAX) {
 		return -1 * LDBL_MAX;
 	}
-	if (*this == real_number_value::zero) {
+	if (*this == 0) {
 		return 0.0L;
 	}
 	long double answer = 0;
@@ -1135,7 +1126,7 @@ Real::operator long double() const noexcept {
 	return answer;
 }
 
-short Real::At(const int index) const {
+short FixedReal::At(const int index) const {
 	if (data_dec_ == nullptr || infinity_bit_) {
 		std::cout << "$ERROR$ referenced value out of range" << std::endl;
 		std::cout << "ERROR position : " << __FUNCTION__ << std::endl;
@@ -1150,64 +1141,57 @@ short Real::At(const int index) const {
 	}
 	return data_dec_[-1 * index - 1];
 }
-Real Real::RoundOff(const int _digit) noexcept {
+FixedReal FixedReal::RoundOff(const int _digit) noexcept {
 	(*this) = real_number::RoundOff(*this, _digit);
 	return *this;
 }
-Real Real::RoundUp(const int _digit) noexcept {
+FixedReal FixedReal::RoundUp(const int _digit) noexcept {
 	(*this) = real_number::RoundUp(*this, _digit);
 	return *this;
 }
-Real Real::RoundDown(const int _digit) noexcept {
+FixedReal FixedReal::RoundDown(const int _digit) noexcept {
 	(*this) = real_number::RoundDown(*this, _digit);
 	return *this;
 }
 
 
-Real Power(const real_number::Real& base, const int index) noexcept {
-	if ((base == real_number_value::zero && index == 0) || base.data_dec_ == nullptr) {
-		return real_number_value::NaN;
-	}
-	if (base.infinity_bit_) {
-		if (base.sign_ || index & 1) {
-			return real_number_value::infinity_negative;
+FixedReal Power(const real_number::FixedReal& base, const FixedReal& exponent) noexcept {
+	if (exponent.IsNatural()) {
+		/*FixedReal answer{ 1 };
+		if(base==0){return 0;}
+		if(exponent==0)return 1;
+		if (base == 10) {
+			return (answer << _index);
 		}
-		return real_number_value::infinity;
-	}
-	Real answer{ 1 };
-	if (index == 0) {
-		return answer;
-	}
-	if (base == 10) {
-		return (answer << index);
-	}
-	if (index > 0) {
-		for (int i = index - 1;i >= 0;i--) {
-			answer *= base;
+		if (_index > 0) {
+			for (int i = _index - 1;i >= 0;i--) {
+				answer *= base;
+			}
 		}
-		return answer;
+		else {
+			for (int i = -1 * _index - 1;i >= 0;i--) {
+				answer /= base;
+			}
+		}
+		return answer;*/
 	}
-	for (int i = -1 * index - 1;i >= 0;i--) {
-		answer /= base;
-	}
-	return answer;
 }
-Real PowerOfTen(const int index) noexcept {
-	Real answer{ 1 };
+FixedReal PowerOfTen(const int index) noexcept {
+	FixedReal answer{ 1 };
 	return answer << index;
 }
-Real SquareRoot(const Real& _Val) noexcept {
+FixedReal SquareRoot(const FixedReal& _Val) noexcept {
 	if (_Val.data_dec_ == nullptr || _Val.sign_) {
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val.infinity_bit_) {
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
-	if (_Val == real_number_value::zero) {
-		return real_number_value::zero;
+	if (_Val == 0) {
+		return 0;
 	}
-	real_number::Real answer{};
-	real_number::Real remainder{ _Val };
+	real_number::FixedReal answer{};
+	real_number::FixedReal remainder{ _Val };
 	int highest;
 	if (_Val.DigitHighest() >= 0) {
 		highest = _Val.DigitHighest() / 2;
@@ -1218,18 +1202,18 @@ Real SquareRoot(const Real& _Val) noexcept {
 	}
 	answer.Reserve(std::max(highest + 1, base::kAccuracy));
 	answer[highest] = base::SqrtUnder100(10 * _Val.At(2 * highest + 1) + _Val.At(2 * highest));
-	remainder -= Real{ answer.At(highest) * answer.At(highest) } << (2 * highest);
-	if (remainder == real_number_value::zero) {
+	remainder -= FixedReal{ answer.At(highest) * answer.At(highest) } << (2 * highest);
+	if (remainder == 0) {
 		return answer;
 	}
-	real_number::Real k{};
+	real_number::FixedReal k{};
 	for (int i = highest - 1;i >= -1 * base::kAccuracy;i--) {
 		for (int j = 9;j > 0;j--) {
 			k = (((answer >> i) * 2 + j) * j) << 2 * i;
 			if (k <= remainder) {
 				answer[i] = j;
 				remainder -= k;
-				if (remainder == real_number_value::zero) {
+				if (remainder == 0) {
 					return answer;
 				}
 				break;
@@ -1238,21 +1222,21 @@ Real SquareRoot(const Real& _Val) noexcept {
 	}
 	return answer;
 }
-Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept {
+FixedReal PrintSquareRoot(const FixedReal& _Val, std::ostream& _Ostr) noexcept {
 	if (_Val.data_dec_ == nullptr || _Val.sign_) {
 		_Ostr << "NaN" << std::endl;
-		return real_number_value::NaN;
+		return FixedReal(nullptr);
 	}
 	if (_Val.infinity_bit_) {
 		_Ostr << "INFINITY" << std::endl;
-		return real_number_value::infinity;
+		return FixedReal(false, true);
 	}
-	if (_Val == real_number_value::zero) {
+	if (_Val == 0) {
 		_Ostr << 0 << std::endl;
-		return real_number_value::zero;
+		return 0;
 	}
-	real_number::Real answer{};
-	real_number::Real remainder{ _Val };
+	real_number::FixedReal answer{};
+	real_number::FixedReal remainder{ _Val };
 	int highest;
 	if (_Val.DigitHighest() >= 0) {
 		highest = _Val.DigitHighest() / 2;
@@ -1263,8 +1247,8 @@ Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept {
 	}
 	answer.Reserve(std::max(highest + 1, base::kAccuracy));
 	answer[highest] = base::SqrtUnder100(10 * _Val.At(2 * highest + 1) + _Val.At(2 * highest));
-	remainder -= Real{ answer.At(highest) * answer.At(highest) } << (2 * highest);
-	if (remainder == real_number_value::zero) {
+	remainder -= FixedReal{ answer.At(highest) * answer.At(highest) } << (2 * highest);
+	if (remainder == 0) {
 		if (highest >= 0) {
 			_Ostr << answer.At(highest);
 			for (int i = 0;i < highest;i++) {
@@ -1298,11 +1282,11 @@ Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept {
 		}
 		_Ostr << answer.At(highest);
 	}
-	if (remainder == real_number_value::zero) {
+	if (remainder == 0) {
 		_Ostr << std::endl;
 		return answer;
 	}
-	real_number::Real k{};
+	real_number::FixedReal k{};
 	for (int i = highest - 1;i >= -1 * base::kAccuracy;i--) {
 		for (int j = 9;j > 0;j--) {
 			k = (((answer >> i) * 2 + j) * j) << 2 * i;
@@ -1310,7 +1294,7 @@ Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept {
 				answer[i] = j;
 				remainder -= k;
 				_Ostr << j;
-				if (remainder == real_number_value::zero) {
+				if (remainder == 0) {
 					_Ostr << std::endl;
 					return answer;
 				}
@@ -1327,24 +1311,24 @@ Real PrintSquareRoot(const Real& _Val, std::ostream& _Ostr) noexcept {
 	_Ostr << std::endl;
 	return answer;
 }
-Real RoundOff(const Real& _Val, const int _digit) noexcept {
+FixedReal RoundOff(const FixedReal& _Val, const int _digit) noexcept {
 	if (_Val.infinity_bit_ || _Val.data_dec_ == nullptr) {
 		return _Val;
 	}
 	if (_digit > _Val.DigitInt()) {
-		return real_number_value::zero;
+		return 0;
 	}
 	if (_digit < -1 * _Val.DigitDec()) {
 		return _Val;
 	}
-	real_number::Real answer{};
+	real_number::FixedReal answer{};
 	if (_digit == _Val.reserved_size_) {
 		answer.Reserve(_digit + 1);
 		if (_Val.At(_digit - 1) > 4) {
 			answer[_digit] = 1;
 			return answer;
 		}
-		return real_number_value::zero;
+		return 0;
 	}
 	answer = _Val;
 	if (_Val.At(_digit - 1) > 4) {
@@ -1358,17 +1342,17 @@ Real RoundOff(const Real& _Val, const int _digit) noexcept {
 	}
 	return RoundDown(answer, _digit);
 }
-Real RoundUp(const Real& _Val, const int _digit) noexcept {
+FixedReal RoundUp(const FixedReal& _Val, const int _digit) noexcept {
 	if (_Val.infinity_bit_ || _Val.data_dec_ == nullptr) {
 		return _Val;
 	}
 	if (_digit > _Val.DigitInt()) {
-		return real_number_value::zero;
+		return 0;
 	}
 	if (_digit < -1 * _Val.DigitDec()) {
 		return _Val;
 	}
-	real_number::Real answer{};
+	real_number::FixedReal answer{};
 	if (_digit == _Val.reserved_size_) {
 		answer.Reserve(_digit + 1);
 		answer[_digit] = 1;
@@ -1384,17 +1368,17 @@ Real RoundUp(const Real& _Val, const int _digit) noexcept {
 	}
 	return RoundDown(answer, _digit);
 }
-Real RoundDown(const Real& _Val, const int _digit) noexcept {
+FixedReal RoundDown(const FixedReal& _Val, const int _digit) noexcept {
 	if (_Val.infinity_bit_ || _Val.data_dec_ == nullptr) {
 		return _Val;
 	}
 	if (_digit >= _Val.DigitInt()) {
-		return real_number_value::zero;
+		return 0;
 	}
 	if (_digit < -1 * _Val.DigitDec()) {
 		return _Val;
 	}
-	real_number::Real answer{ _Val };
+	real_number::FixedReal answer{ _Val };
 	for (int i = _digit - 1;i >= -1 * answer.reserved_size_;i--) {
 		answer[i] = 0;
 	}
