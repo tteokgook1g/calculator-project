@@ -155,6 +155,8 @@ FixedReal RoundOff(const FixedReal& _Val, const int _digit = 0) noexcept;
 FixedReal RoundUp(const FixedReal& _Val, const int _digit = 0) noexcept;
 FixedReal RoundDown(const FixedReal& _Val, const int _digit = 0) noexcept;
 
+FixedReal Factorial(const unsigned int _Val);
+
 REAL_NUMBER_END
 
 #endif // !CALCULATOR_PROJECT_REAL_NUMBER_H_
