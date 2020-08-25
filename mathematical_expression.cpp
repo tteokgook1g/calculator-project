@@ -105,8 +105,17 @@ void Expression::ExpressionCalculate() noexcept {
 			}
 			temp1 = numbers.top();
 			numbers.pop();
-			numbers.push(real_number::SquareRoot(temp1));
-			continue;
+			switch (postfix_expression_.at(i).value_.c_str()[0])
+			{
+			case '!':
+				numbers.push(real_number::Factorial(static_cast<unsigned int>(temp1)));
+				continue;
+			default:
+				if (postfix_expression_.at(i).value_ == "sqrt") {
+					numbers.push(real_number::SquareRoot(temp1));
+				}
+				continue;
+			}
 		case ComponentType::kBinaryOperator:
 			if (numbers.size() < 2) {
 				value_of_expression_ = real_number::FixedReal(nullptr);
@@ -551,6 +560,8 @@ Expression::ComponentType ValueType(std::string& val) noexcept {
 	if (val.length() == 1) {
 		switch (val.at(0))
 		{
+		case '!':
+			return Expression::ComponentType::kUnaryOperator;
 		case '(':
 			return Expression::ComponentType::kOpenParenthesis;
 		case ')':
@@ -580,6 +591,8 @@ OperatorPriority Priority(const std::string& val) noexcept {
 	if (val.length() == 1) {
 		switch (val.at(0))
 		{
+		case '!':
+			return OperatorPriority::kFour;
 		case '(':
 			return OperatorPriority::kZero;
 		case ')':
