@@ -1435,4 +1435,17 @@ FixedReal RoundDown(const FixedReal& _Val, const int _digit) noexcept {
 	return answer;
 }
 
+FixedReal Factorial(const unsigned int _Val) {
+	FixedReal table[13] = { 1,1,2,6,24,120,720,5040,40320,362880,3628800,39916800,479001600 };
+	if (_Val <= 12) return table[_Val];
+	else
+	{
+		FixedReal answer = table[12];
+		for (FixedReal i = 13;i <= _Val;i++) {
+			answer *= i;
+		}
+		return answer;
+	}
+}
+
 REAL_NUMBER_END

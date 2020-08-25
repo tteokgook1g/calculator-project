@@ -1,9 +1,8 @@
 # Calculator Project
-# Version 1.1.0 released
+# Version 1.2.0 released
 # Major Updates
-## Added function "real_number::IsEven,IsOdd"
-## Improved function "real_number::Power"
-## Added operator "mathematical_expression : ^ (power)"
+## Added function "real_number::Factorial"
+## Added operator "mathematical_expression : ! (factorial)"
 #
 ### Programming language
 #### -c++
